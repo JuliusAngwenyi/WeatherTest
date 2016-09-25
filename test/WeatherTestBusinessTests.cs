@@ -40,7 +40,7 @@ namespace WeatherTests
         {
             // Arrange
             var apiUrl = @"http://localhost:60350/weather/london";
-            var apiService = new WeatherTestAPIService();
+            var apiService = new HttpClientHelpers();
 
             //Act
             var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
@@ -61,7 +61,7 @@ namespace WeatherTests
         {
             // Arrange
             var apiUrl = @"http://localhost:60350/weather/london";
-            var apiService = new WeatherTestAPIService();
+            var apiService = new HttpClientHelpers();
 
             //Act
             var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
@@ -78,7 +78,7 @@ namespace WeatherTests
         {
             //Arrange
             var apiUrl = @"http://localhost:60368/paris";
-            var apiService = new WeatherTestAPIService();
+            var apiService = new HttpClientHelpers();
 
             //Act
             var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
@@ -93,7 +93,7 @@ namespace WeatherTests
         {
             //Arrange
             var apiUrl = @"http://localhost:60368/paris";
-            var apiService = new WeatherTestAPIService();
+            var apiService = new HttpClientHelpers();
 
             //Act
             var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
