@@ -9,77 +9,53 @@ using WeatherTest.Model;
 namespace WeatherTest.Business
 {
     //This class interfaces the Live API
-    //Assumption about the logic which identifies the availle APIs to interface with
-    //For this sample, I have hard coded the Bbc and Accu Sample APIs
-    //Because time constraints, no error handling has been done yet
-    public class WeatherTestAPIService
+    //Assumption about the logic which identifies the available APIs to interface with
+    //For this sample, I have hard coded the Bbc and Accu Sample APIs within the Enum
+    //To extend with more APIs, a) simply add new values to the Enum WeatherTestAPIType
+    //b)Create new Factory class which inherits from base WeatherTestSampleApiFactory and implements those new APIs
+    public class WeatherTestAPIService: IWeatherTestAPIService
     {
+        IWeatherTestSampleApi weatherApi = null;
+
         public WeatherData QueryLiveWeatherData(string location)
         {
-            //Use parent class to hold aggregated data in 
-            //WeatherDataSourceSystemType.CelsiusAndKph system
+            //Use parent/base class to hold aggregated data which will use 
+            //WeatherDataSourceSystemType.CelsiusAndKph metric system
+            //During display to user, this will be converted to selected units
             var aggregatedData = new WeatherData();
-            var allData = new List<IWeatherData>();
-            
-            var bbcData = DownloadBbcWeather(location);
-            allData.Add(bbcData);
 
-            var accuData = DownloadAccuWeather(location);
-            allData.Add(accuData);
+            try
+            {
+                //Use IIWeatherData for listing all data from different Apis
+                var allData = new List<IWeatherData>();
 
-            aggregatedData.Location = bbcData.Location;//Same location, so any API should do
-            aggregatedData.Temperature = allData.Average(data => data.GetTempInCelsius());// bbcData.GetTempInCelsius() + accuData.GetTempInCelsius()
-            aggregatedData.Windspeed = allData.Average(data => data.GetWindSpeedInKph());
+                //Factory pattern to instantiate specific Apis based on Api Type
+                var apiFactory = new WeatherTestSampleApiFactory();
+
+                var availableApis = Enum.GetValues(typeof(WeatherTestApiType)).Cast<WeatherTestApiType>();
+                foreach (var api in availableApis)
+                {
+                    this.weatherApi = apiFactory.CreateWeatherTestSampleApi(api);
+                    var apiData = this.weatherApi.QueryWeatherData(location);
+                    if (apiData != null) //Gracefully handle API availabilty, if API is not working for example
+                    {
+                        allData.Add(apiData);
+                    }
+                }
+                if (allData.Any())//If not APIs are working at all, aggregatedData will have default values. User interface can use this to display warning messages
+                {
+                    aggregatedData.Location = location;//Same location, so any API location value should do
+                    aggregatedData.Temperature = allData.Average(data => data.GetTempInCelsius());
+                    aggregatedData.Windspeed = allData.Average(data => data.GetWindSpeedInKph());
+                }
+            }
+            catch (Exception)
+            {
+                //TODO ILog.LogError()...
+            }
 
             return aggregatedData;
         }
-
-        private AccuWeatherData DownloadAccuWeather(string location)
-        {
-            var apiUrl = String.Format(@"http://localhost:60368/{0}",location);
-            var apiService = new WeatherTestAPIService();
-
-            var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
-            var data = JsonConvert.DeserializeObject<WeatherApiPayload>(sut.Result);
-
-            var accuData = new AccuWeatherData()
-            {
-                Temperature = data.TemperatureFahrenheit.Value,
-                Windspeed =data.WindSpeedMph.Value,
-                Location = data.Where
-            };
-
-            return accuData;
-        }
-        private BbcWeatherData DownloadBbcWeather(string location)
-        {
-            // Arrange
-            var apiUrl = String.Format(@"http://localhost:60350/weather/london", location);
-            var apiService = new WeatherTestAPIService();
-
-            //Act
-            var sut = apiService.DownloadWeatherDataFromAPI(apiUrl);
-
-            var data = JsonConvert.DeserializeObject<WeatherApiPayload>(sut.Result);
-            //{"location":"london","temperatureCelsius":6.0,"windSpeedKph":31.0}
-
-            var bbcData = new BbcWeatherData()
-            {
-                Temperature = data.TemperatureCelsius.Value,
-                Windspeed = data.WindSpeedKph.Value,
-                Location = data.Location
-            };
-            return bbcData;
-        }
-        public async Task<string> DownloadWeatherDataFromAPI(string url)
-        {
-            var client = new HttpClient();
-
-            var response = await client.GetAsync(@url);
-
-            var content = await response.Content.ReadAsStringAsync();
-
-            return content;
-        }
     }
+    
 }

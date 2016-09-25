@@ -12,15 +12,16 @@ namespace WeatherTest.SampleWebsite.Controllers
     public class HomeController : Controller
     {
         private WeatherData aggregatedData;
-        private WeatherTestAPIService _weatherTestAPIService;//TODO: refactor to use Interface and DI
+        private IWeatherTestAPIService _weatherTestAPIService;
 
-        public HomeController()
+        public HomeController(IWeatherTestAPIService weatherTestAPIService)
         {
-            _weatherTestAPIService = new WeatherTestAPIService();
+            _weatherTestAPIService = weatherTestAPIService;
         }
 
         public IActionResult Index()
         {
+            //Improvements:
             //The Weather Data could be cached on the client side
             //to avoid unnecessary API calls in scenarios where the user simply
             //wants to view results in different units
@@ -40,8 +41,8 @@ namespace WeatherTest.SampleWebsite.Controllers
                 TemperatureDisplayUnits = model.TemperatureDisplayUnits,
                 WindSpeedDislayUnits = model.WindSpeedDislayUnits
             };
-            //By design, Temperature is in Celsius and WindSpeed in Kph
-            //Check the user specified units and return measurement in correct units
+            //By design, Temperature is in Celsius and WindSpeed in Kph (metric system)
+            //Check the user specified units and convert measurement in correct units
             if (model.TemperatureDisplayUnits == TemperatureDisplayUnits.Fahareinheit)
             {
                 viewModel.Temperature = Math.Round(data.GetTempInFahrenheit(),1);
