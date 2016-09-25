@@ -1,0 +1,65 @@
+﻿@model  WeatherTest.SampleWebsite.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Weather Test - Julius Angwenyi";
+}
+
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Julius Angwenyi attempt</h3>
+        <ul>
+            <li>SOLID principles</li>
+            <li>xUnit tests</li>            
+        </ul>
+
+        <div>
+             <h4>Location examples are:</h4>
+            <ul>
+                <li>London</li>
+                <li>Paris</li>
+            </ul>
+            <h4>Temperature Units supported</h4>
+            <ul>
+                <li>Celsius</li>
+                <li>Fahrenheit</li>
+            </ul>
+            <h4>Wind speed Units supported</h4>
+            <ul>
+                <li>Kph</li>
+                <li>Mph</li>
+            </ul>
+        </div>
+    </div>
+     
+
+    <div class="col-md-3">
+        <h3>Start your query now</h3>
+        @using (Html.BeginForm("QueryWeatherData", "Home"))
+        {
+            <div >
+                <label>Location: @Html.EditorFor(m => m.Location)</label>
+            </div>
+            <div class="col-md-3">
+                <div>
+                    <label>
+                        Celsius:@Html.RadioButtonFor(m => m.TemperatureDisplayUnits, 0, new { @id = "Celsius" })
+                    </label>
+                    <label>Fahrenheit: @Html.RadioButtonFor(m => m.TemperatureDisplayUnits, 1, new { @id = "Fahrenheit" })</label>
+                </div>
+                <div>
+                    <label>Kph: @Html.RadioButtonFor(m => m.WindSpeedDislayUnits, 0, new { @id = "Kph" })</label>
+                    <label>Mph: @Html.RadioButtonFor(m => m.WindSpeedDislayUnits, 1, new { @id = "Mph" })</label>
+                </div>
+                <input type="submit" value="Query" />
+            </div>
+        }
+  </div>
+       
+    <div class="col-md-3">
+        <h3>Weather Results</h3>
+        <div>@Html.LabelFor(m => m.Location): @Html.DisplayTextFor(m => m.Location) </div>
+        <div>@Html.LabelFor(m => m.Temperature): @Html.DisplayTextFor(m => m.Temperature) @Html.DisplayTextFor(m => m.TemperatureDisplayUnits) </div>
+        <div>@Html.LabelFor(m => m.Windspeed): @Html.DisplayTextFor(m => m.Windspeed) @Html.DisplayTextFor(m => m.WindSpeedDislayUnits)</div>
+    </div>
+</div>
