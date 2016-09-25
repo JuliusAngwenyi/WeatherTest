@@ -31,7 +31,7 @@ Your application/website should:
 
 **Julius** *All calls to APIs are asynchronous meaning the page will not be blocked (have latency issues). This however can be improved by also introducing a timeout in future to cater for scenarios where it takes longer periods of time for APIs to respond*
 
-**Julius** *The test website does not have client side or server side user input validation. In the event the user doesn't specify a location, the APIs have been gracefully handled and the user will get no results. Instead it will be 0 Celsius and 0 Kph. This can be improved to show user friendly message.
+**Julius** *The test website does not have client side or server side user input validation. In the event the user doesn't specify a location, the APIs have been gracefully handled and the user will get no results. Instead it will be 0 Celsius and 0 Kph. This can be improved to show user friendly message*
 
 
 
