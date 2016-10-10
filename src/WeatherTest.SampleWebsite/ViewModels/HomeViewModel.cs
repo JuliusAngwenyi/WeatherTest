@@ -8,7 +8,7 @@ namespace WeatherTest.SampleWebsite.ViewModels
     public enum TemperatureDisplayUnits
     {
         Celsius,
-        Fahareinheit
+        Fahreinheit
     }
     public enum WindSpeedDislayUnits
     {

@@ -63,7 +63,7 @@ namespace WeatherTests
             var sut = new AccuWeatherData();
             //Act
             //Assert
-            Assert.Equal(sut.WeatherDataSourceSystemType, WeatherDataSourceSystemType.FahrenheitAndMph);
+            Assert.Equal(WeatherDataSourceSystemType.FahrenheitAndMph, sut.WeatherDataSourceSystemType);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace WeatherTests
         }
 
         [Fact]
-        public void BbcWeather7_5MphReturns12_075Kph()
+        public void BbcWeather7_5MphReturns12Kph()
         {
             //Arrange
             var sut = new AccuWeatherData();

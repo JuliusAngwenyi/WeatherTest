@@ -10,8 +10,7 @@ using WeatherTest.SampleWebsite.ViewModels;
 namespace WeatherTest.SampleWebsite.Controllers
 {
     public class HomeController : Controller
-    {
-        private WeatherData aggregatedData;
+    {        
         private IWeatherTestAPIService _weatherTestAPIService;
 
         public HomeController(IWeatherTestAPIService weatherTestAPIService)
@@ -29,7 +28,7 @@ namespace WeatherTest.SampleWebsite.Controllers
         }
 
         [HttpPost]
-        public IActionResult QueryWeatherData(HomeViewModel model)//, string Location ="london")
+        public IActionResult QueryWeatherData(HomeViewModel model)
         {
             var data = _weatherTestAPIService.QueryLiveWeatherData(model.Location);
             
@@ -43,7 +42,7 @@ namespace WeatherTest.SampleWebsite.Controllers
             };
             //By design, Temperature is in Celsius and WindSpeed in Kph (metric system)
             //Check the user specified units and convert measurement in correct units
-            if (model.TemperatureDisplayUnits == TemperatureDisplayUnits.Fahareinheit)
+            if (model.TemperatureDisplayUnits == TemperatureDisplayUnits.Fahreinheit)
             {
                 viewModel.Temperature = Math.Round(data.GetTempInFahrenheit(),1);
             }
